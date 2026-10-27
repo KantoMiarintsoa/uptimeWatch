@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { normalizeUrl } from "@/lib/validate-url";
 
 type Props = {
-  // Renvoie un message d'erreur, ou null si l'ajout a réussi
   onAdd: (url: string) => Promise<string | null>;
 };
 
@@ -24,11 +23,9 @@ export function AddSiteForm({ onAdd }: Props) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // 1. Vérification rapide dans le navigateur
     const url = normalizeUrl(value);
     if (!url) return fail("URL invalide", "Exemple : https://example.com");
 
-    // 2. Vérification par le serveur : le site n'est ajouté que s'il l'accepte
     setPending(true);
     const error = await onAdd(url);
     setPending(false);

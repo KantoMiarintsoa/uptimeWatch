@@ -1,3 +1,14 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Site } from "@/lib/types";
@@ -29,11 +40,34 @@ export function SiteRow({ site, checking, onCheck, onRemove }: Props) {
         <Button size="sm" variant="outline" onClick={onCheck} disabled={checking}>
           Vérifier
         </Button>
-        <Button size="sm" variant="destructive" onClick={onRemove}>
-          Supprimer
-        </Button>
+        <ConfirmRemove url={site.url} onConfirm={onRemove} />
       </div>
     </li>
+  );
+}
+
+// Demande une confirmation avant de supprimer : l'action est irréversible
+function ConfirmRemove({ url, onConfirm }: { url: string; onConfirm: () => void }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger render={<Button size="sm" variant="destructive" />}>
+        Supprimer
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Supprimer ce site ?</AlertDialogTitle>
+          <AlertDialogDescription className="break-all">
+            {url} ne sera plus surveillé. Cette action est irréversible.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Annuler</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={onConfirm}>
+            Supprimer
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
